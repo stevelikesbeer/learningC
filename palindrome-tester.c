@@ -49,11 +49,11 @@ int main(int argc, char* argv[argc+1])
 
     if(isPalindrone)
     {
-        printf("%s is indeed a palindrone\n", buffer);
+        printf("%s is indeed a palindrome\n", buffer);
     }
     else 
     {
-        printf("%s is NOT a palindrone\n", buffer);
+        printf("%s is NOT a palindrome\n", buffer);
     }
 
     return EXIT_SUCCESS;
