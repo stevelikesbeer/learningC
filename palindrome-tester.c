@@ -28,7 +28,7 @@ int main(int argc, char* argv[argc+1])
     {
         if(!Push(buffer[i]))
         {
-            printf("Error: Stackoverflow.");
+            printf("Error: Stack blown.");
             return EXIT_FAILURE;
         }
     }
@@ -37,7 +37,10 @@ int main(int argc, char* argv[argc+1])
     for(size_t i = 0; i < charactersRead; i++)
     {
         char oppositeLetter = Pop();
-        if(oppositeLetter == '\0')
+
+        // we want to check if i == charactersRead so if our stack ends before our buffer
+        // (will never happen in this simple example) we still consider that not a valid palindrome
+        if(oppositeLetter == '\0' && i == charactersRead) 
             break;
 
         if(oppositeLetter != buffer[i])
