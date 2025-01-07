@@ -1,74 +1,81 @@
+//gcc -o a palindrome-tester.c stack.c -D STACK_SIZE=50
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-
-#define STACK_SIZE 50
-
-char stack[STACK_SIZE];
-int stackPointer = 0;
+#include "stack.h"
 
 // prototypes
-int Push(char letter);
-char Pop();
+void PopulateStack(char buffer[], size_t numberOfCharactersRead);
+bool IsPalindrome(char buffer[], size_t numberOfCharactersRead, bool isDebug);
+void PrintArrayAsHexAndChar(char array[], size_t arraySize, char message[]);
 
 int main(int argc, char* argv[argc+1])
 {
-    printf("Please enter a word to test if it's a palindrone: ");
-    
+    bool IsDebug = argc > 1 ? !strcmp(argv[1],"debug") : false;
     char buffer[STACK_SIZE];
-    size_t charactersRead = 0;
+    size_t numberOfCharactersRead = 0;
 
+    printf("Please enter a word to test if it's a palindrome: ");
     fgets(buffer, STACK_SIZE, stdin); 
-    charactersRead = strcspn(buffer, "\r\n"); // or just \n in linux
-    buffer[charactersRead] = '\0'; // replace crlf from the buffer with null terminating character
-    
-    for(size_t i = 0; i < charactersRead; i++) // < means null terminating never makes it into the stack
-    {
-        if(!Push(buffer[i]))
-        {
-            printf("Error: Stack blown.");
-            return EXIT_FAILURE;
-        }
-    }
+    numberOfCharactersRead = strlen(buffer);
 
-    bool isPalindrome = true;
-    for(size_t i = 0; i < charactersRead; i++)
-    {
-        char oppositeLetter = Pop();
+    if(IsDebug) PrintArrayAsHexAndChar(buffer, STACK_SIZE,"Buffer before replacement");
+    buffer[numberOfCharactersRead-1] = '\0'; // replace line feed with null terminating character
+    if(IsDebug) PrintArrayAsHexAndChar(buffer, STACK_SIZE,"Buffer after replacement");
 
-        printf("stack: %02x    buffer: %02x \n", oppositeLetter, buffer[i]);
-
-        // we are only checking for null terminating if Pop returns an error (stack is smaller than buffer).
-        // this will never happen in our small example but shrug
-        if(oppositeLetter == '\0' || oppositeLetter != buffer[i])
-        {
-            isPalindrome = false;
-            break;
-        }
-    }
-
-    isPalindrome ? printf("%s is indeed a palindrome\n", buffer) : printf("%s is NOT a palindrome\n", buffer);
+    PopulateStack(buffer, numberOfCharactersRead);
+    IsPalindrome(buffer, numberOfCharactersRead, IsDebug) ? printf("\n%s is indeed a palindrome\n", buffer) 
+                                                          : printf("\n%s is NOT a palindrome\n", buffer);
 
     return EXIT_SUCCESS;
 }
 
-int Push(char letter)
+void PrintArrayAsHexAndChar(char array[], size_t arraySize, char message[])
 {
-    if(stackPointer > STACK_SIZE - 1)
-        return 0;
-
-    stack[stackPointer] = letter;
-    stackPointer++;
-
-    return 1;
+    printf("\n***************************\n%s: \n***************************\n", message);
+    for(size_t i = 0; i < arraySize; i++)
+    {
+        if ( array[i] == '\r')  // if it's a carriage return, convert it to text
+            printf("hex: 0x%02x\t\tchar: \\r\n", array[i]);
+        else if (array[i] == '\n') // if its a line feed, convert it to text
+            printf("hex: 0x%02x\t\tchar: \\n\n", array[i]);
+        else
+            printf("hex: 0x%02x\t\tchar: %c\n", array[i], array[i]);
+    }
 }
 
-char Pop()
+void PopulateStack(char buffer[], size_t numberOfCharactersRead)
 {
-    stackPointer--;
-    if (stackPointer < 0)
-        return '\0';
+    for(size_t i = 0; i < numberOfCharactersRead - 1; i++)
+    {
+        if(!StackIsFull())
+            Push(buffer[i]);
+    }
+}
 
-    return stack[stackPointer];
+bool IsPalindrome(char buffer[], size_t numberOfCharactersRead, bool isDebug)
+{
+    if(isDebug) puts("\nComparing stack to buffer");
+
+    bool isPalindrome = true;
+    for(size_t i = 0; i < numberOfCharactersRead - 1; i++)
+    {
+        if(StackIsEmpty())
+        {
+            isPalindrome = false;
+            break;
+        }
+        char oppositeLetter = Pop();
+
+        if(isDebug) printf("stack: 0x%02x (%c)\t\tbuffer: 0x%02x (%c) \n", oppositeLetter, oppositeLetter, buffer[i], buffer[i]);
+
+        if(oppositeLetter != buffer[i])
+        {
+            isPalindrome = false;
+            if(!isDebug) break;
+        }
+    }
+
+    return isPalindrome;
 }
