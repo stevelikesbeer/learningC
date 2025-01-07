@@ -21,8 +21,8 @@ int main(int argc, char* argv[argc+1])
 
     //scanf("%s",buffer); this stops once it reads a space. Is this what we really want? I don't htink so
     fgets(buffer, STACK_SIZE, stdin); // make sure to use fgets because it sets a limit on the number of characters to enter and prevents buffer overflow
-    charactersRead = strcspn(buffer, "\n");
-    buffer[charactersRead] = '\0'; // replace the new line character from the buffer with null terminating character
+    charactersRead = strcspn(buffer, "\r\n");
+    buffer[charactersRead] = '\0'; // replace the carriage return + new line character from the buffer with null terminating character
     
     for(size_t i = 0; i < charactersRead; i++)
     {
