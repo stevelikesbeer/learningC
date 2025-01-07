@@ -19,10 +19,9 @@ int main(int argc, char* argv[argc+1])
     char buffer[STACK_SIZE];
     size_t charactersRead = 0;
 
-    //scanf("%s",buffer); this stops once it reads a space. Is this what we really want? I don't htink so
-    fgets(buffer, STACK_SIZE, stdin); // make sure to use fgets because it sets a limit on the number of characters to enter and prevents buffer overflow
-    charactersRead = strcspn(buffer, "\r\n");
-    buffer[charactersRead] = '\0'; // replace the carriage return + new line character from the buffer with null terminating character
+    fgets(buffer, STACK_SIZE, stdin); 
+    charactersRead = strcspn(buffer, "\r\n"); // or just \n in linux
+    buffer[charactersRead] = '\0'; // replace crlf from the buffer with null terminating character
     
     for(size_t i = 0; i < charactersRead; i++) // < means null terminating never makes it into the stack
     {
@@ -33,7 +32,7 @@ int main(int argc, char* argv[argc+1])
         }
     }
 
-    bool isPalindrone = true;
+    bool isPalindrome = true;
     for(size_t i = 0; i < charactersRead; i++)
     {
         char oppositeLetter = Pop();
@@ -44,19 +43,12 @@ int main(int argc, char* argv[argc+1])
         // this will never happen in our small example but shrug
         if(oppositeLetter == '\0' || oppositeLetter != buffer[i])
         {
-            isPalindrone = false;
+            isPalindrome = false;
             break;
         }
     }
 
-    if(isPalindrone)
-    {
-        printf("%s is indeed a palindrome\n", buffer);
-    }
-    else 
-    {
-        printf("%s is NOT a palindrome\n", buffer);
-    }
+    isPalindrome ? printf("%s is indeed a palindrome\n", buffer) : printf("%s is NOT a palindrome\n", buffer);
 
     return EXIT_SUCCESS;
 }
@@ -76,9 +68,7 @@ char Pop()
 {
     stackPointer--;
     if (stackPointer < 0)
-    {
         return '\0';
-    }
 
     return stack[stackPointer];
 }
