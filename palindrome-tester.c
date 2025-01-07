@@ -24,7 +24,7 @@ int main(int argc, char* argv[argc+1])
     charactersRead = strcspn(buffer, "\r\n");
     buffer[charactersRead] = '\0'; // replace the carriage return + new line character from the buffer with null terminating character
     
-    for(size_t i = 0; i < charactersRead; i++)
+    for(size_t i = 0; i < charactersRead; i++) // < means null terminating never makes it into the stack
     {
         if(!Push(buffer[i]))
         {
@@ -38,12 +38,11 @@ int main(int argc, char* argv[argc+1])
     {
         char oppositeLetter = Pop();
 
-        // we want to check if i == charactersRead so if our stack ends before our buffer
-        // (will never happen in this simple example) we still consider that not a valid palindrome
-        if(oppositeLetter == '\0' && i == charactersRead) 
-            break;
+        printf("stack: %02x    buffer: %02x \n", oppositeLetter, buffer[i]);
 
-        if(oppositeLetter != buffer[i])
+        // we are only checking for null terminating if Pop returns an error (stack is smaller than buffer).
+        // this will never happen in our small example but shrug
+        if(oppositeLetter == '\0' || oppositeLetter != buffer[i])
         {
             isPalindrone = false;
             break;
