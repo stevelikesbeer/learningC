@@ -50,7 +50,11 @@ void PopulateStack(char buffer[], size_t numberOfCharactersRead)
     for(size_t i = 0; i < numberOfCharactersRead - 1; i++)
     {
         if(!StackIsFull())
-            Push(buffer[i]);
+        {
+            DataFrame* data = (DataFrame*)malloc(sizeof(DataFrame));
+            data->charData = buffer[i];
+            Push(data);
+        }
     }
 }
 
@@ -66,15 +70,19 @@ bool IsPalindrome(char buffer[], size_t numberOfCharactersRead, bool isDebug)
             isPalindrome = false;
             break;
         }
-        char oppositeLetter = Pop();
+        DataFrame* stackData = Pop();
 
-        if(isDebug) printf("stack: 0x%02x (%c)\t\tbuffer: 0x%02x (%c) \n", oppositeLetter, oppositeLetter, buffer[i], buffer[i]);
+        if(isDebug) printf("stack: 0x%02x (%c)\t\tbuffer: 0x%02x (%c) \n", stackData->charData, stackData->charData, buffer[i], buffer[i]);
 
-        if(oppositeLetter != buffer[i])
+        if(stackData->charData != buffer[i])
         {
             isPalindrome = false;
+            free(stackData);
+            stackData = NULL;
             if(!isDebug) break;
         }
+        free(stackData);
+        stackData = NULL;
     }
 
     return isPalindrome;

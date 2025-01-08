@@ -1,20 +1,20 @@
 #include "stack.h"
 
-char stack[STACK_SIZE];
+DataFrame* stack[STACK_SIZE];
 int stackPointer = -1;
 
-void Push(char letter)
+void Push(DataFrame* frame)
 {
     stackPointer++;
-    stack[stackPointer] = letter;
+    stack[stackPointer] = frame;
 }
 
-char Pop()
+DataFrame* Pop()
 {
-    char character = stack[stackPointer];
+    DataFrame* frame = stack[stackPointer];
     stackPointer--;
 
-    return character;
+    return frame;
 }
 
 bool StackIsFull()

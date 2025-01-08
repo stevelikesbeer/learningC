@@ -2,8 +2,15 @@
 #define STACK_H
 #include <stdbool.h>
 
-void Push(char letter);
-char Pop();
+typedef union {
+    char charData;
+    int intData;
+    char stringData[500];
+    double doubleData; 
+} DataFrame;
+
+void Push(DataFrame* frame);
+DataFrame* Pop();
 bool StackIsFull();
 bool StackIsEmpty();
 
