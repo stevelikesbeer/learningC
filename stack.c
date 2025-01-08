@@ -6,9 +6,6 @@ bool stackInitialized = false;
 
 int StackInitialize(int stackSize)
 {
-    if(stackSize <= 0)
-        return 0;
-
     if(!stackInitialized)
         stackStructure.stack = (DataFrame**)malloc(stackSize * sizeof(DataFrame*));
     else
