@@ -15,6 +15,7 @@ int StackInitialize(int stackSize)
         return 0;
 
     stackStructure.stackSize = stackSize;
+    stackInitialized = true;
     return 1;
 }
 
@@ -22,6 +23,7 @@ void StackDestroy()
 {
     free(stackStructure.stack);
     stackStructure.stack == NULL;
+    stackInitialized = false;
 }
 
 void StackPush(DataFrame* frame)
