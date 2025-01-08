@@ -1,28 +1,52 @@
+#include <stdlib.h>
 #include "stack.h"
 
-DataFrame* stack[STACK_SIZE];
-int stackPointer = -1;
+StackStructure stackStructure;
+bool stackInitialized = false;
 
-void Push(DataFrame* frame)
+int StackInitialize(int stackSize)
 {
-    stackPointer++;
-    stack[stackPointer] = frame;
+    if(stackSize <= 0)
+        return 0;
+
+    if(!stackInitialized)
+        stackStructure.stack = (DataFrame**)malloc(stackSize * sizeof(DataFrame*));
+    else
+        stackStructure.stack = (DataFrame**)realloc(stackStructure.stack,stackSize * sizeof(DataFrame*));
+
+    if(stackStructure.stack == NULL)
+        return 0;
+
+    stackStructure.stackSize = stackSize;
+    return 1;
 }
 
-DataFrame* Pop()
+void StackDestroy()
 {
-    DataFrame* frame = stack[stackPointer];
-    stackPointer--;
+    free(stackStructure.stack);
+    stackStructure.stack == NULL;
+}
+
+void StackPush(DataFrame* frame)
+{
+    stackStructure.stackPointer++;
+    stackStructure.stack[stackStructure.stackPointer] = frame;
+}
+
+DataFrame* StackPop()
+{
+    DataFrame* frame = stackStructure.stack[stackStructure.stackPointer];
+    stackStructure.stackPointer--;
 
     return frame;
 }
 
 bool StackIsFull()
 {
-    return stackPointer == STACK_SIZE;
+    return stackStructure.stackPointer == stackStructure.stackSize;
 }
 
 bool StackIsEmpty()
 {
-    return stackPointer <  0;
+    return stackStructure.stackPointer <  0;
 }

@@ -9,8 +9,16 @@ typedef union {
     double doubleData; 
 } DataFrame;
 
-void Push(DataFrame* frame);
-DataFrame* Pop();
+typedef struct {
+    DataFrame** stack;
+    int stackPointer;
+    int stackSize;
+} StackStructure;
+
+int StackInitialize(int stackSize);
+void StackDestroy();
+void StackPush(DataFrame* frame);
+DataFrame* StackPop();
 bool StackIsFull();
 bool StackIsEmpty();
 
