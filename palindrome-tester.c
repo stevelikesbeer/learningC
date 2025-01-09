@@ -1,4 +1,4 @@
-//gcc -o a palindrome-tester.c stack.c -D STACK_SIZE=50
+//gcc -o a palindrome-tester.c stack.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

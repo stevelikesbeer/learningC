@@ -1,12 +1,11 @@
 #include <stdlib.h>
 #include "stack.h"
 
-StackStructure stackStructure;
-bool stackInitialized = false;
+StackStructure stackStructure = {.stack = NULL, .stackPointer = -1};
 
 int StackInitialize(int stackSize)
 {
-    if(!stackInitialized)
+    if(stackStructure.stack == NULL)
         stackStructure.stack = (DataFrame**)malloc(stackSize * sizeof(DataFrame*));
     else
         stackStructure.stack = (DataFrame**)realloc(stackStructure.stack,stackSize * sizeof(DataFrame*));
@@ -15,7 +14,7 @@ int StackInitialize(int stackSize)
         return 0;
 
     stackStructure.stackSize = stackSize;
-    stackInitialized = true;
+
     return 1;
 }
 
@@ -23,7 +22,6 @@ void StackDestroy()
 {
     free(stackStructure.stack);
     stackStructure.stack == NULL;
-    stackInitialized = false;
 }
 
 void StackPush(DataFrame* frame)
