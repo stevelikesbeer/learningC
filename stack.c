@@ -5,10 +5,8 @@ StackStructure stackStructure = {.stack = NULL, .stackPointer = -1};
 
 int StackInitialize(int stackSize)
 {
-    if(stackStructure.stack == NULL)
-        stackStructure.stack = (DataFrame**)malloc(stackSize * sizeof(DataFrame*));
-    else
-        stackStructure.stack = (DataFrame**)realloc(stackStructure.stack,stackSize * sizeof(DataFrame*));
+    stackStructure.stack = !stackStructure.stack ? (DataFrame**)malloc(stackSize * sizeof(DataFrame*))
+                                                 : (DataFrame**)realloc(stackStructure.stack,stackSize * sizeof(DataFrame*));
 
     if(stackStructure.stack == NULL)
         return 0;
@@ -22,12 +20,16 @@ void StackDestroy()
 {
     free(stackStructure.stack);
     stackStructure.stack == NULL;
+
+    return;
 }
 
 void StackPush(DataFrame* frame)
 {
     stackStructure.stackPointer++;
     stackStructure.stack[stackStructure.stackPointer] = frame;
+
+    return;
 }
 
 DataFrame* StackPop()
@@ -40,7 +42,7 @@ DataFrame* StackPop()
 
 bool StackIsFull()
 {
-    return stackStructure.stackPointer == stackStructure.stackSize;
+    return stackStructure.stackPointer == (stackStructure.stackSize -1);
 }
 
 bool StackIsEmpty()
